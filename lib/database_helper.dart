@@ -5,7 +5,6 @@ import 'models/food_item.dart';
 import 'models/meal_plan.dart';
 
 class DatabaseHelper {
-
   // Class used for database operations
   static const int _version = 1;
   static const String _dbname = "Food.db";

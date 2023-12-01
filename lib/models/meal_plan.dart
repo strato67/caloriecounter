@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'food_item.dart';
 
 class MealPlan {

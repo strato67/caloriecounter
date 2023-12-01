@@ -8,7 +8,7 @@ import 'models/meal_plan.dart';
 
 void main() {
   runApp(
-    MaterialApp(
+    const MaterialApp(
       title: 'Meal Planner',
       home: Home(),
     ),
@@ -16,7 +16,7 @@ void main() {
 }
 
 class Home extends StatefulWidget {
-  Home({super.key});
+  const Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();
@@ -33,6 +33,7 @@ class _HomeState extends State<Home> {
     _loadMealPlans();
   }
 
+  // Loading the saved meal plans to be displayed on main page
   void _loadMealPlans() async {
     List<MealPlan> fetchedMealPlans = await DatabaseHelper.getAllMealPlans();
     setState(() {
@@ -95,7 +96,6 @@ class _HomeState extends State<Home> {
                   onPressed: () async {
                     await DatabaseHelper.deleteMealPlan(mealPlan);
                     setState(() {
-                      // Assuming mealPlans is a List containing your meal plans
                       mealPlans.remove(mealPlan);
                     });
                   },
@@ -130,6 +130,8 @@ class _HomeState extends State<Home> {
     );
   }
 
+  // Custom function to allow for new foods to be added to database,
+  // linked to button beside search button on appbar
   void _addFoodToDB(BuildContext context) {
     showDialog(
       context: context,
@@ -178,5 +180,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
-

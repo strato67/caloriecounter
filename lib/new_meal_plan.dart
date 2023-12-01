@@ -25,6 +25,7 @@ class _NewMealPlanState extends State<NewMealPlan> {
 
   TextEditingController targetCaloriesController = TextEditingController();
 
+  // Function to calculate total calorie count
   int calculateTotalCalories() {
     return mealPlan.foodItems.fold(0, (int total, FoodItem foodItem) {
       return total + (foodItem.calories ?? 0);
@@ -37,16 +38,16 @@ class _NewMealPlanState extends State<NewMealPlan> {
     super.initState();
     isEditing = widget.existingMealPlan != null;
 
+    // State if user is editing meal plan
     if (isEditing) {
       mealPlan = widget.existingMealPlan!;
-
     } else {
+      // Otherwise user will create new meal plan
       mealPlan = MealPlan(
         date: DateTime.now(),
         foodItems: [],
         totalCalories: 0,
       );
-
     }
     targetCaloriesController.text = maxCalories.toString();
     totalCalories = calculateTotalCalories();
@@ -117,8 +118,8 @@ class _NewMealPlanState extends State<NewMealPlan> {
                   );
                   if (selectedFood != null) {
                     setState(() {
+                      // Adding new food item to meal plan list, then update calorie total
                       mealPlan.foodItems.add(selectedFood);
-                      // This is the critical change:
                       mealPlan.totalCalories = calculateTotalCalories();
                     });
                   }
@@ -142,6 +143,8 @@ class _NewMealPlanState extends State<NewMealPlan> {
                 onPressed: () async {
                   int targetCalories =
                       int.tryParse(targetCaloriesController.text) ?? 0;
+
+                  // Check that target calories and food items are added
                   if (mealPlan.totalCalories == 0 ||
                       mealPlan.foodItems.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -150,18 +153,20 @@ class _NewMealPlanState extends State<NewMealPlan> {
                               Text('Target calories and meal plan required.')),
                     );
                   } else if (mealPlan.totalCalories > targetCalories) {
+                    // Check that user has not exceeded calorie limit set
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                           content: Text(
                               'Total calories cannot exceed target calories')),
                     );
                   } else {
-                    if(isEditing){
+                    // Only use if user is editing meal plan
+                    if (isEditing) {
                       await DatabaseHelper.updateMealPlan(mealPlan);
                     }
                     int id = await DatabaseHelper.addMealPlan(mealPlan);
                     if (id > 0) {
-                      // Successfully saved
+                      // Successfully saved meal plan
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                             content: Text('Meal Plan saved successfully.')),
@@ -253,7 +258,7 @@ class _NewMealPlanState extends State<NewMealPlan> {
     );
   }
 
-  // Select Date function
+  // Select Date function for adding to meal plan
   Future<void> _selectDate(BuildContext context) async {
     final DateTime currentDate = selectedDate ?? DateTime.now();
     final DateTime? date = await showDatePicker(
@@ -266,7 +271,7 @@ class _NewMealPlanState extends State<NewMealPlan> {
       setState(() {
         selectedDate = date;
 
-        // Use a temporary variable to hold the modified date
+        // Using a temporary variable to hold the modified date
         DateTime updatedDate = date;
 
         // Update mealPlan.date only if not editing an existing meal plan
@@ -280,11 +285,11 @@ class _NewMealPlanState extends State<NewMealPlan> {
       });
     }
   }
+
   // Format Date on Button
   String getFormattedDate() {
     if (selectedDate != null) {
-      // Use DateFormat to format the selectedDate.
-
+      // Using DateFormat to format the selectedDate.
       return DateFormat.yMMMMd().format(selectedDate!);
     } else {
       return 'Select Date';

@@ -5,6 +5,7 @@ import 'models/meal_plan.dart';
 
 class AddFood extends StatefulWidget {
   final MealPlan mealPlan;
+
   const AddFood({super.key, required this.mealPlan});
 
   @override
@@ -46,7 +47,8 @@ class _AddFoodState extends State<AddFood> {
             trailing: IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
-                Navigator.pop(context, foodItem); //Return selected food item to meal plan
+                Navigator.pop(
+                    context, foodItem); //Return selected food item to meal plan
               },
             ),
           );
